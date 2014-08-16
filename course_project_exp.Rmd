@@ -8,9 +8,9 @@ output:
 
 ## The exponential distribution
 
-First, we load the `dplyr` package for data manipulation and the `matrixStats` package for the `rowSds` function.
+(Note: we need load the `dplyr` package for data manipulation and the `matrixStats` package for the `rowSds` function.)
 
-```{r message=FALSE}
+```{r message = FALSE, echo = FALSE}
 library("dplyr")
 library("matrixStats")
 ```
@@ -20,10 +20,7 @@ library("matrixStats")
 We set the seed, the rate parameter `lambda`, the number of observations `nobs`, and the number of simulations `sims`.
 
 ```{r}
-set.seed(12345)
-lambda = 0.2
-nobs = 40
-sims = 1000
+set.seed(12345); lambda = 0.2; nobs = 40; sims = 1000
 ```
 
 Now we take `r options(scipen = 5); nobs*sims` random draws from the exponential distribution. We will organize this into a matrix with `r sims` rows and `r nobs` columns and view this as simulating `r sims` repetitions of a draw of `r nobs` random exponentials with rate $\lambda = `r lambda`$.

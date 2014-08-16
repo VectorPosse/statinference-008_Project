@@ -1,0 +1,12 @@
+---
+output:
+  pdf_document: default
+  html_document:
+    keep_md: yes
+---
+
+# Statistical Inference- Course Project
+
+## Tooth Growth data
+
+
