@@ -1,9 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document:
-    keep_md: yes
----
 
 # Statistical Inference- Course Project
 
@@ -11,26 +5,21 @@ output:
 
 (Note: we need the `ggplot2` package for graphing and the `reshape2` package for the `dcast` function.)
 
-```{r echo = FALSE}
-library("ggplot2")
-library("reshape2")
 
-```
 
 
 ### 1. Load the ToothGrowth data and perform some basic exploratory data analyses.
 
 The ToothGrowth data is located in the `datasets` package. In two pages, there is no room to show all the EDA. (I looked at a bunch of histograms and boxplots of the variables.) The most helpful summary of the data is given below.
 
-```{r echo = FALSE}
-library("datasets")
-```
+
 
 ### 2. Provide a basic summary of the data.
 
 A good way summarize the data is a clustered boxplot. (The unit of measurement for tooth length is not specified---maybe millimeters?)
 
-```{r fig.height = 4, fig.width = 8}
+
+```r
 ggplot(ToothGrowth, aes(x = factor(dose), y = len, fill = supp)) +
     xlab("Dose (mg)") +
     ylab("Tooth length (mm?)") +
@@ -39,6 +28,8 @@ ggplot(ToothGrowth, aes(x = factor(dose), y = len, fill = supp)) +
                          labels=c("Orange juice", "Ascorbic acid")) +
     geom_boxplot()
 ```
+
+![plot of chunk unnamed-chunk-3](./course_project_ToothGrowth_files/figure-html/unnamed-chunk-3.png) 
 
 It appears that at each dose except the highest, delivering the supplemental Vitamin C by orange juice corresponds to longer teeth. There is a clear increase in tooth length as the dose increases.
 
@@ -54,7 +45,8 @@ $H_{A}: \mu_{d} \neq 0$
 
 We reshape the data so that each row represents a single guinea pig. Tooth length with OJ and tooth length with VC will be separate variables (paired for each guinea pig), with each measurement averaged over the three dosing levels. The `dcast` function needs an ID variable, so we must add it first (assuming that the observations on the guinea pigs are in the same order for each combination of factors).
 
-```{r}
+
+```r
 ID <- rep(1:10, 6)
 ToothGrowth2 <- cbind(ID, ToothGrowth)
 ToothGrowth_by_supp <- dcast(ToothGrowth2, ID ~ supp,
@@ -64,19 +56,22 @@ ToothGrowth_by_supp <- dcast(ToothGrowth2, ID ~ supp,
 
 Now we run a t-test and get a t-interval for this paired data.
 
-```{r results = "hide"}
+
+```r
 t.test(ToothGrowth_by_supp$OJ, ToothGrowth_by_supp$VC, paired = TRUE)
 ```
 
 Next we will look at a possible difference in tooth length based on the dosage. A paired t-test can only compare two levels, so we will compare the lowest dose (0.5 mg) directly to the highest dose (2 mg). The hypotheses are as before and the reshaping process is likewise similar.
 
-```{r}
+
+```r
 ToothGrowth_by_dose <- dcast(ToothGrowth2, ID ~ dose,
                              fun.aggregate = mean,
                              value.var = "len")
 ```
 
-```{r results = "hide"}
+
+```r
 t.test(ToothGrowth_by_dose$`2`, ToothGrowth_by_dose$`0.5`, paired = TRUE)
 ```
 
